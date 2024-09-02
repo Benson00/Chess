@@ -30,12 +30,39 @@ class Board:
         :rtype: None
 
         :raises: No exceptions are raised by this method.
-
-        :note: This method assumes that `Pawn`, `Rook`, `Knight`, `Bishop`, `Queen`, and `King` classes have been defined,
-            and that these classes accept a color argument ('black' or 'white').
+        
+        note: This method assumes that `Pawn`, `Rook`, `Knight`, `Bishop`, `Queen`, and `King` classes have been defined.
 
         """
-        pass
+        for i in range(8):
+            self.grid[1][i] = Pawn("black")
+            self.grid[6][i] = Pawn("white")
+        
+        # Torri
+        self.grid[0][0] = Rook("black")
+        self.grid[0][7] = Rook("black")
+        self.grid[7][0] = Rook("white")
+        self.grid[7][7] = Rook("white")
+        
+        # Cavalli
+        self.grid[0][1] = Knight("black")
+        self.grid[0][6] = Knight("black")
+        self.grid[7][1] = Knight("white")
+        self.grid[7][6] = Knight("white")
+        
+        # Alfieri
+        self.grid[0][2] = Bishop("black")
+        self.grid[0][5] = Bishop("black")
+        self.grid[7][2] = Bishop("white")
+        self.grid[7][5] = Bishop("white")
+        
+        # Regine
+        self.grid[0][3] = Queen("black")
+        self.grid[7][3] = Queen("white")
+        
+        # Re
+        self.grid[0][4] = King("black")
+        self.grid[7][4] = King("white")
 
 
 
