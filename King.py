@@ -8,30 +8,16 @@ class King(Piece):
     def __init__(self, color):
         super().__init__(color)
     
-    def get_moves(self, r, c):
-        allowed_moves =[]
+def get_allowed_moves(self, r, c):
+    allowed_moves = []
+
+    moves = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 0), (0, 1), (1, -1), (1, 0), (1, 1)]
+
+    for dr, dc in moves:
+        new_row = r + dr
+        new_col = c + dc
         
-        if r-1 >= 0:
-            if c-1 >= 0:
-                allowed_moves.append((r-1,c-1))
-            allowed_moves.append(r-1,c)
-            if c+1 <= 7:
-                allowed_moves.append((r-1,c+1))
-        
-        if r+1 <= 7:
-            if c-1 >= 0:
-                allowed_moves.append((r+1,c-1))
-            allowed_moves.append(r+1,c)
-            if c+1 <= 7:
-                allowed_moves.append((r+1,c+1))
+        if 0 <= new_row <= 7 and 0 <= new_col <= 7:
+            allowed_moves.append((new_row, new_col))
 
-        if c-1 >= 0:
-                allowed_moves.append((r,c-1))
-        allowed_moves.append(r,c)
-        if c+1 <= 7:
-                allowed_moves.append((r,c+1))
-
-        return allowed_moves
-
-
-
+    return allowed_moves
