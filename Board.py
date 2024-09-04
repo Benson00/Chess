@@ -1,3 +1,6 @@
+from Piece import King, Queen, Bishop, Horse, Rook, Pawn 
+
+
 class Board:
     
     def __init__(self):
@@ -45,10 +48,10 @@ class Board:
         self.grid[7][7] = Rook("white")
         
         # Cavalli
-        self.grid[0][1] = Knight("black")
-        self.grid[0][6] = Knight("black")
-        self.grid[7][1] = Knight("white")
-        self.grid[7][6] = Knight("white")
+        self.grid[0][1] = Horse("black")
+        self.grid[0][6] = Horse("black")
+        self.grid[7][1] = Horse("white")
+        self.grid[7][6] = Horse("white")
         
         # Alfieri
         self.grid[0][2] = Bishop("black")
@@ -63,6 +66,26 @@ class Board:
         # Re
         self.grid[0][4] = King("black")
         self.grid[7][4] = King("white")
+        self.__print_board()
 
 
+    def __print_board(self):
+            """
+            Prints the chessboard with the pieces in their current positions.
 
+            This method iterates over the grid and prints a simple textual representation of the board.
+
+            Use this method for debugging.
+
+            Private method.
+            """
+            piece_symbols = {
+                'Pawn': 'P', 'Rook': 'R', 'Horse': 'H', 'Bishop': 'B', 'Queen': 'Q', 'King': 'K'
+            }
+            
+            for row in self.grid:
+                print(" | ".join([piece_symbols.get(type(piece).__name__, '.') if piece else '.' for piece in row]))
+                print("-" * 33)
+
+
+chess_board = Board()

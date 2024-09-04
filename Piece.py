@@ -1,10 +1,30 @@
-from abc import ABC, abstractmethod
-
-
-class Piece(ABC):
-    def __init__(self,color):
+class Piece:
+    def __init__(self, color):
         self.color = color
-    
-    @abstractmethod
-    def get_moves(self, r, c):
-        pass
+
+    def get_color(self):
+        return self.color
+
+class Pawn(Piece):
+    def get_type(self):
+        return "Pawn"
+
+class Rook(Piece):
+    def get_type(self):
+        return "Rook"
+
+class Horse(Piece):
+    def get_type(self):
+        return "Horse"
+
+class Bishop(Piece):
+    def get_type(self):
+        return "Bishop"
+
+class Queen(Piece):
+    def get_type(self):
+        return "Queen"
+
+class King(Piece):
+    def get_type(self):
+        return "King"
