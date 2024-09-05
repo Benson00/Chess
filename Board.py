@@ -110,7 +110,7 @@ class Board:
         if piece:
             possible_moves = piece.get_moves(self.grid, start_row, start_col)
             if (end_row, end_col) in possible_moves:
-                self.grid[end_row][end_col] = piece
+                self.grid[end_row][end_col] = piece     # manage the capture too
                 self.grid[start_row][start_col] = None
         self.__print_board()
 

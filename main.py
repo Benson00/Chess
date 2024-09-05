@@ -52,12 +52,11 @@ def highlight_moves(screen, possible_moves):
         # Draw a semi-transparent blue rectangle on the possible move squares
         pygame.draw.rect(screen, (0, 255, 255, 128), pygame.Rect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE), 3)
 
-
-# Main Loop
 def main():
-    chess_board = Board()  # Initialize the chessboard
+    chess_board = Board()  
     selected_piece = None
     possible_moves = []
+    current_turn = "white"  # Inizializza il turno del bianco
 
     running = True
     while running:
@@ -70,36 +69,45 @@ def main():
                 col = pos[0] // SQUARE_SIZE
                 row = pos[1] // SQUARE_SIZE
 
-                if selected_piece:
+                if selected_piece:  # Se un pezzo è già selezionato, il clic è per il movimento
                     if (row, col) in possible_moves:
                         start_row, start_col = selected_piece_position
                         chess_board.move_piece(start_row, start_col, row, col)
                         selected_piece = None
                         possible_moves = []
+
+                        # Cambia il turno dopo un movimento valido
+                        current_turn = "black" if current_turn == "white" else "white"
                     else:
-                        # Select a new piece
-                        selected_piece = chess_board.grid[row][col]
-                        if selected_piece:
+                        new_piece = chess_board.grid[row][col]
+                        if new_piece and new_piece.get_color() == selected_piece.get_color():
+                            selected_piece = new_piece
                             possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
                             selected_piece_position = (row, col)
                 else:
-                    # Select a piece
+                    # Seleziona un pezzo
                     selected_piece = chess_board.grid[row][col]
                     if selected_piece:
-                        possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
-                        selected_piece_position = (row, col)
+                        # Controlla se il pezzo selezionato appartiene al turno corrente
+                        if selected_piece.get_color() == current_turn:
+                            possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
+                            selected_piece_position = (row, col)
+                        else:
+                            # Il pezzo non appartiene al turno corrente, non selezionarlo
+                            selected_piece = None
 
-        # Draw the board and pieces
+        # Disegna la scacchiera e i pezzi
         draw_board(screen)
         draw_pieces(screen, chess_board)
 
-        # Highlight the possible moves if a piece is selected
+        # Evidenzia le mosse possibili se un pezzo è selezionato
         if possible_moves:
             highlight_moves(screen, possible_moves)
 
         pygame.display.flip()
 
     pygame.quit()
+
 
 
 if __name__ == "__main__":
