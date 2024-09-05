@@ -70,22 +70,19 @@ class Board:
 
 
     def __print_board(self):
-            """
-            Prints the chessboard with the pieces in their current positions.
-
-            This method iterates over the grid and prints a simple textual representation of the board.
-
-            Use this method for debugging.
-
-            Private method.
-            """
-            piece_symbols = {
-                'Pawn': 'P', 'Rook': 'R', 'Horse': 'H', 'Bishop': 'B', 'Queen': 'Q', 'King': 'K'
-            }
+        """
+        Prints the chessboard with the pieces in their current positions.
+        This method iterates over the grid and prints a simple textual representation of the board.
+        Use this method for debugging.
+        Private method.
+        """
+        piece_symbols = {
+            'Pawn': 'P', 'Rook': 'R', 'Horse': 'H', 'Bishop': 'B', 'Queen': 'Q', 'King': 'K'
+        }
             
-            for row in self.grid:
-                print(" | ".join([piece_symbols.get(type(piece).__name__, '.') if piece else '.' for piece in row]))
-                print("-" * 33)
+        for row in self.grid:
+            print(" | ".join([piece_symbols.get(type(piece).__name__, '.') if piece else '.' for piece in row]))
+            print("-" * 33)
 
     def get_piece_moves(self, row, col):
         """
@@ -100,7 +97,24 @@ class Board:
             return piece.get_moves(self.grid, row, col)  # Calls the get_moves of the specific piece, like Pawn
         return []
 
+    def move_piece(self, start_row, start_col, end_row, end_col):
+        """
+        Move a piece from (start_row, start_col) to (end_row, end_col) if the move is valid.
+
+        :param start_row: The starting row of the piece.
+        :param start_col: The starting column of the piece.
+        :param end_row: The target row for the piece.
+        :param end_col: The target column for the piece.
+        """
+        piece = self.grid[start_row][start_col]
+        if piece:
+            possible_moves = piece.get_moves(self.grid, start_row, start_col)
+            if (end_row, end_col) in possible_moves:
+                self.grid[end_row][end_col] = piece
+                self.grid[start_row][start_col] = None
+        self.__print_board()
 
 
 chess_board = Board()
 print(chess_board.get_piece_moves(1,1))
+chess_board.move_piece(6,1,5,2)
