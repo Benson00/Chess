@@ -87,5 +87,20 @@ class Board:
                 print(" | ".join([piece_symbols.get(type(piece).__name__, '.') if piece else '.' for piece in row]))
                 print("-" * 33)
 
+    def get_piece_moves(self, row, col):
+        """
+        Retrieve possible moves for the piece at the given position.
+
+        :param row: The row of the piece.
+        :param col: The column of the piece.
+        :return: A list of possible moves for the piece.
+        """
+        piece = self.grid[row][col]
+        if piece:
+            return piece.get_moves(self.grid, row, col)  # Calls the get_moves of the specific piece, like Pawn
+        return []
+
+
 
 chess_board = Board()
+print(chess_board.get_piece_moves(1,1))
