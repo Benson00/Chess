@@ -53,6 +53,52 @@ class Rook(Piece):
 class Horse(Piece):
     def get_type(self):
         return "Horse"
+    
+    def get_moves(self, board, row, col):
+
+        """
+        Calculate all possible moves for the horse based on the rules of chess.
+
+        :param board: The chessboard (8x8) with the pieces.
+        :param row: The current row of the horse.
+        :param col: The current column of the horse.
+        :return: List of tuples (row, column) representing the possible moves.
+        """
+
+        '''
+        Moves:
+        (row + 2, col + 1)
+        (row + 2, col - 1)
+        (row - 2, col + 1)
+        (row - 2, col - 1)
+        (row + 1, col + 2)
+        (row + 1, col - 2)
+        (row - 1, col + 2)
+        (row - 1, col - 2)
+        '''
+        moves = []
+        movements = [(2,1),(2,-1),(-2,1),(-2,-1),(1,2),(1,-2),(-1,2),(-1,-2)]
+        for mov in movements:
+            if 0 <= row + mov[0] < 8 and 0 <= col + mov[1] < 8:
+                if board[row + mov[0]][col + mov[1]] is None:
+                    moves.append((row + mov[0],col + mov[1]))
+                else:
+                    target = board[row + mov[0]][col + mov[1]]
+                    if target.get_color() != self.color:
+                        moves.append((row + mov[0],col + mov[1]))
+        return moves
+            
+
+            
+
+        
+
+
+
+
+
+
+
 
 class Bishop(Piece):
     def get_type(self):
