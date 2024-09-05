@@ -56,7 +56,7 @@ def main():
     chess_board = Board()  
     selected_piece = None
     possible_moves = []
-    current_turn = "white"  # Inizializza il turno del bianco
+    current_turn = "white" 
 
     running = True
     while running:
@@ -69,14 +69,12 @@ def main():
                 col = pos[0] // SQUARE_SIZE
                 row = pos[1] // SQUARE_SIZE
 
-                if selected_piece:  # Se un pezzo è già selezionato, il clic è per il movimento
+                if selected_piece:  
                     if (row, col) in possible_moves:
                         start_row, start_col = selected_piece_position
                         chess_board.move_piece(start_row, start_col, row, col)
                         selected_piece = None
                         possible_moves = []
-
-                        # Cambia il turno dopo un movimento valido
                         current_turn = "black" if current_turn == "white" else "white"
                     else:
                         new_piece = chess_board.grid[row][col]
@@ -85,22 +83,17 @@ def main():
                             possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
                             selected_piece_position = (row, col)
                 else:
-                    # Seleziona un pezzo
                     selected_piece = chess_board.grid[row][col]
                     if selected_piece:
-                        # Controlla se il pezzo selezionato appartiene al turno corrente
                         if selected_piece.get_color() == current_turn:
                             possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
                             selected_piece_position = (row, col)
                         else:
-                            # Il pezzo non appartiene al turno corrente, non selezionarlo
                             selected_piece = None
 
-        # Disegna la scacchiera e i pezzi
         draw_board(screen)
         draw_pieces(screen, chess_board)
 
-        # Evidenzia le mosse possibili se un pezzo è selezionato
         if possible_moves:
             highlight_moves(screen, possible_moves)
 
