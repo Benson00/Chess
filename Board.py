@@ -115,6 +115,3 @@ class Board:
         self.__print_board()
 
 
-chess_board = Board()
-print(chess_board.get_piece_moves(1,1))
-chess_board.move_piece(6,1,5,2)
