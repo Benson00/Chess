@@ -56,7 +56,8 @@ def main():
     chess_board = Board()  
     selected_piece = None
     possible_moves = []
-    current_turn = "white" 
+    turn = 'white'  # Track the current player's turn
+    game_over = False  # Track if the game is over
 
     running = True
     while running:
@@ -64,42 +65,59 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-                col = pos[0] // SQUARE_SIZE
-                row = pos[1] // SQUARE_SIZE
+            if not game_over:  # Allow interaction only if the game is not over
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    col = pos[0] // SQUARE_SIZE
+                    row = pos[1] // SQUARE_SIZE
 
-                if selected_piece:  
-                    if (row, col) in possible_moves:
-                        start_row, start_col = selected_piece_position
-                        chess_board.move_piece(start_row, start_col, row, col)
-                        selected_piece = None
-                        possible_moves = []
-                        current_turn = "black" if current_turn == "white" else "white"
-                    else:
-                        new_piece = chess_board.grid[row][col]
-                        if new_piece and new_piece.get_color() == selected_piece.get_color():
-                            selected_piece = new_piece
-                            possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
-                            selected_piece_position = (row, col)
-                else:
-                    selected_piece = chess_board.grid[row][col]
-                    if selected_piece:
-                        if selected_piece.get_color() == current_turn:
-                            possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
-                            selected_piece_position = (row, col)
-                        else:
+                    if selected_piece:  # If a piece is already selected, handle movement
+                        if (row, col) in possible_moves:
+                            start_row, start_col = selected_piece_position
+                            chess_board.move_piece(start_row, start_col, row, col)
+                            
+                            # Switch turn after a valid move
+                            turn = 'black' if turn == 'white' else 'white'
+
+                            # Reset selection
                             selected_piece = None
+                            possible_moves = []
 
+                            # Check for checkmate after the move
+                            if chess_board.is_checkmate(turn):
+                                game_over = True  # End the game if it's checkmate
+                        else:
+                            # Allow selecting a new piece only if it's the player's piece
+                            new_piece = chess_board.grid[row][col]
+                            if new_piece and new_piece.get_color() == turn:
+                                selected_piece = new_piece
+                                possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
+                                selected_piece_position = (row, col)
+                    else:
+                        # Select a piece if it's the player's turn
+                        selected_piece = chess_board.grid[row][col]
+                        if selected_piece and selected_piece.get_color() == turn:
+                            possible_moves = selected_piece.get_moves(chess_board.grid, row, col)
+                            selected_piece_position = (row, col)
+
+        # Draw the board and pieces
         draw_board(screen)
         draw_pieces(screen, chess_board)
 
+        # Highlight the possible moves if a piece is selected
         if possible_moves:
             highlight_moves(screen, possible_moves)
+
+        # If the game is over, display a checkmate message
+        if game_over:
+            font = pygame.font.SysFont('Arial', 60)
+            text = font.render(f'{turn.capitalize()} is in Checkmate!', True, (255, 0, 0))
+            screen.blit(text, (WIDTH // 4, HEIGHT // 2))
 
         pygame.display.flip()
 
     pygame.quit()
+
 
 
 

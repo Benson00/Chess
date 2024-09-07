@@ -114,4 +114,65 @@ class Board:
                 self.grid[start_row][start_col] = None
         self.__print_board()
 
+    def is_checkmate(self, color):
+        """
+        Check if the player with the given color is in checkmate.
 
+        :param color: The color of the player to check for checkmate ('white' or 'black').
+        :return: True if it's checkmate, False otherwise.
+        """
+        king_pos = self.find_king(color)
+
+        if not self.is_in_check(color, king_pos):
+            return False
+
+        for row in range(8):
+            for col in range(8):
+                piece = self.grid[row][col]
+                if piece and piece.get_color() == color:
+                    possible_moves = piece.get_moves(self.grid, row, col)
+                    for move in possible_moves:
+                        # Simulate the move and check if it removes the check
+                        if self.simulate_move(row, col, move[0], move[1], color):
+                            return False
+
+        # 4. If no valid move can escape the check, it's checkmate
+        return True
+
+    def find_king(self, color):
+        """Find the position of the king of the given color."""
+        for row in range(8):
+            for col in range(8):
+                piece = self.grid[row][col]
+                if isinstance(piece, King) and piece.get_color() == color:
+                    return (row, col)
+        return None
+
+    def is_in_check(self, color, king_pos):
+        """Check if the king of the given color is in check."""
+        for row in range(8):
+            for col in range(8):
+                piece = self.grid[row][col]
+                if piece and piece.get_color() != color:
+                    possible_moves = piece.get_moves(self.grid, row, col)
+                    if king_pos in possible_moves:
+                        return True
+        return False
+
+    def simulate_move(self, start_row, start_col, end_row, end_col, color):
+        """
+        Simulate a move and check if it removes the check.
+        This method temporarily moves the piece and checks the board state.
+        """
+        original_piece = self.grid[end_row][end_col]  # Save the piece at the destination
+        self.grid[end_row][end_col] = self.grid[start_row][start_col]
+        self.grid[start_row][start_col] = None
+
+        king_pos = self.find_king(color)
+        is_still_in_check = self.is_in_check(color, king_pos)
+
+        # Undo the move
+        self.grid[start_row][start_col] = self.grid[end_row][end_col]
+        self.grid[end_row][end_col] = original_piece
+
+        return not is_still_in_check
